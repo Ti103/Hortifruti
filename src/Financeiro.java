@@ -1,8 +1,6 @@
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
 
 import com.google.zxing.WriterException;
 
@@ -10,7 +8,6 @@ public class Financeiro extends Hortifruti{
 	private double caixa, caixaInicio, lucroBruto, preco;
 	private double precoCompra = Math.random() * 2;
 	static int macasVendidas;
-	static Scanner in = new Scanner(System.in);
 	
 	public double getCaixa() {
 		return caixa;
@@ -46,17 +43,18 @@ public class Financeiro extends Hortifruti{
 	}
 	
 	public void gerarReceita() {
-		DecimalFormat mask = new DecimalFormat("0.00");
 		lucroBruto = this.caixa - this.caixaInicio;
-		System.out.println("Inicio do dia: " + mask.format(caixaInicio));
-		System.out.println("Fim do dia: " + mask.format(caixa));
-		System.out.println("Lucro: " + mask.format(lucroBruto));
-		System.out.println("Foram vendidas " + macasVendidas + " maçãs a " +mask.format(preco));
+		System.out.println("Inicio do dia: " + formatPrecos(caixaInicio));
+		System.out.println("Fim do dia: " +formatPrecos(caixa));
+		System.out.println("Forma compradas " + estoque.macasAbastecidas + " maças por " + formatPrecos(precoCompra) + 
+				" cada. Total: " + formatPrecos(estoque.macasAbastecidas * precoCompra));
+		System.out.println("Foram vendidas " + macasVendidas + " maçãs por " + formatPrecos(preco) + " cada. Total: " + formatPrecos(macasVendidas * preco));
+		System.out.println("Lucro: " + formatPrecos(lucroBruto));
 	}
 	
 	public String getTime() {
 		LocalTime lt = LocalTime.now();
-		DateTimeFormatter df = DateTimeFormatter.ofPattern("hh:mm:SS");
+		DateTimeFormatter df = DateTimeFormatter.ofPattern("HH:mm:ss");
 		return lt.format(df);
 	}
 	
@@ -71,13 +69,13 @@ public class Financeiro extends Hortifruti{
 		str += "Preço unitário: " + formatPrecos(preco) + "\n";
 		str += "Valor Total: " + formatPrecos(total) + "\n";
 		str += "Valor recebido: " + formatPrecos(recebido) + "\n";
-		str += "Troco: R$" + formatPrecos(troco) + "\n";
+		str += "Troco: " + formatPrecos(troco) + "\n";
 		str += "******************************" + "\n";
 		str += "CPF: " + Hortifruti.formatCPF(cpf) + "\n";
 		str += "************* Obrigado e volte sempre *****************\n";
 
 		try {
-			QRCode.generateQRCodeImage(str, 350, 350, "./QRCode.png");
+			QRCode.generateQRCodeImage(str, 350, 350, DemoJFileChooser.file.getAbsolutePath() + "/QRCode" + getTime() + ".png");
 		}catch (WriterException e) {
 			System.out.println("Could not generate QR Code, WriterException :: " + e.getMessage());
 		}catch (IOException e) {
@@ -99,7 +97,11 @@ public class Financeiro extends Hortifruti{
 		double troco = 0;
 		if (formaPagamento == 3) {
 			System.out.println("Qual o valor recebido?");
-			recebido = Double.parseDouble(in.nextLine());
+			try {
+				recebido = Double.parseDouble(in.nextLine());				
+			}catch(NumberFormatException e) {
+				Erros.erroDouble(e);
+			}
 			if (recebido >= total) {
 				troco = recebido - total;
 				gerarNotaFiscal(qtde, preco, total, recebido, troco, cpfCliente);

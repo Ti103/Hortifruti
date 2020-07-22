@@ -31,7 +31,15 @@ public class Hortifruti {
 	// Abre a loja, inicializando tudo
 	static void abrirLoja() {
 		System.out.println("Quanto dinheiro você tem em caixa?");
-		double caixa = Double.parseDouble(in.nextLine());
+		String caixaStr = in.nextLine();
+		double caixa = 0;
+		
+		try{
+			caixa = Double.parseDouble(caixaStr);
+		}catch(NumberFormatException e){
+			caixa = Erros.erroDouble(e);
+		}
+		
 		fin = new Financeiro(caixa);
 		estoque = new Estoque();
 		
@@ -41,7 +49,13 @@ public class Hortifruti {
 		estoque.abastecerMacas();
 		
 		System.out.println("Por quanto você vai vender a unidade hoje?");
-		fin.setPreco(Double.parseDouble(in.nextLine()));
+		String precoStr = in.nextLine();
+		
+		try {
+			fin.setPreco(Double.parseDouble(precoStr));
+		}catch(NumberFormatException e) {
+			fin.setPreco(Erros.erroDouble(e));
+		}
 	}
 
 	// Menu inicial
@@ -49,18 +63,22 @@ public class Hortifruti {
 		boolean loop = true;
 		do {
 			System.out.println("1 - Atender cliente \n2 - Gerenciar estoque \n0 - Sair");
-			int opcao = Integer.parseInt(in.nextLine());
-			switch (opcao) {
-			case 1:
-				atenderCliente();
-				break;
-			case 2:
-				estoque.gerenciarEstoque();
-				break;
-			case 0:
-				System.out.println("Saindo!");
-				loop = false;
-				break;
+			try {
+				switch (Integer.parseInt(in.nextLine())) {
+				case 1:
+					atenderCliente();
+					break;
+				case 2:
+					estoque.gerenciarEstoque();
+					break;
+				case 0:
+					System.out.println("Saindo!");
+					loop = false;
+					break;
+				}
+				
+			}catch(NumberFormatException e) {
+				Erros.erroInt(e);
 			}
 		} while (loop);
 	}
@@ -72,22 +90,41 @@ public class Hortifruti {
 			System.out.println("Sinto muito, acabaram as maçãs");
 		} else {
 			System.out.println("Ola, seja bem vinde. Quantas maçãs voce deseja?");
-			int qtde = Integer.parseInt(in.nextLine());
+			int qtde = 0;
+			try {				
+				qtde = Integer.parseInt(in.nextLine());
+			}catch(NumberFormatException e) {
+				Erros.erroInt(e);
+			}
 
 			while (qtde > estoque.macasDisponiveis && estoque.macasDisponiveis > 0) {
 				System.out.println(
 						"Infelizmente só temos " + estoque.macasDisponiveis + " maçãs...\nGostaria de levar outra quantidade?");
-				qtde = Integer.parseInt(in.nextLine());
+				try {
+					qtde = Integer.parseInt(in.nextLine());
+				}catch(NumberFormatException e) {
+					Erros.erroInt(e);
+				}
 			}
 
 			double total = fin.getPreco() * qtde;
-			System.out.println("Vai te custar apenas R$" + formatPrecos(total));
+			System.out.println("Vai te custar apenas " + formatPrecos(total));
 
 			System.out.println("Qual a forma de pagamento?\n1 - Crédito\n2 - Débito\n3 - Dinheiro");
-			int formaPagamento = Integer.parseInt(in.nextLine());
+			int formaPagamento = 0;
+			try {
+				formaPagamento = Integer.parseInt(in.nextLine());	
+			}catch(NumberFormatException e) {
+				Erros.erroInt(e);
+			}
 
 			System.out.println("CPF na nota?\n1 - Sim\n2 - Não");
-			int cpfNota = Integer.parseInt(in.nextLine());
+			int cpfNota = 0;
+			try {
+				cpfNota = Integer.parseInt(in.nextLine());				
+			}catch(NumberFormatException e) {
+				Erros.erroInt(e);
+			}
 
 			String cpfCliente = "";
 			if (cpfNota == 1) {
