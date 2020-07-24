@@ -1,3 +1,4 @@
+package br.com.tipy.hortifruti.errors;
 import java.util.Scanner;
 
 public class Erros {

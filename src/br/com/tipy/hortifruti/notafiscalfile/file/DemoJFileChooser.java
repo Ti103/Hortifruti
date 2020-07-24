@@ -1,3 +1,4 @@
+package br.com.tipy.hortifruti.notafiscalfile.file;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.LayoutManager;
@@ -45,7 +46,7 @@ public class DemoJFileChooser {
 				int option = fileChooser.showOpenDialog(frame);
 				if (option == JFileChooser.APPROVE_OPTION) {
 					file = fileChooser.getSelectedFile();
-					file2 = new File(file.getAbsolutePath() + "/nota fiscal.txt");
+					file2 = new File(getFile().getAbsolutePath() + "/nota fiscal.txt");
 					FileWriter arq;
 					try {
 						if(file2.exists()) {
@@ -72,5 +73,9 @@ public class DemoJFileChooser {
 		panel.add(button);
 		panel.add(label);
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
+	}
+
+	public static File getFile() {
+		return file;
 	}
 }

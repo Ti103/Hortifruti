@@ -1,10 +1,13 @@
+package br.com.tipy.hortifruti.system;
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 import javax.swing.text.MaskFormatter;
+
+import br.com.tipy.hortifruti.datetime.DateTime;
+import br.com.tipy.hortifruti.errors.Erros;
+import br.com.tipy.hortifruti.notafiscalfile.file.Arquivo;
 
 public class Hortifruti {
 	
@@ -14,22 +17,17 @@ public class Hortifruti {
 	static Financeiro fin;
 	static Estoque estoque;
 
-	public static void main(String[] args) {
-		Arquivo.start(getDate());
+//	excluir
+	public void main(String[] args) {
+		Arquivo.start(DateTime.getDate());
 		abrirLoja();
 		menu();
 		fin.gerarReceita();
 		System.exit(0);
 	}
-	
-	public static String getDate() {
-		LocalDate lt = LocalDate.now();
-		DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		return lt.format(df);
-	}
 
 	// Abre a loja, inicializando tudo
-	static void abrirLoja() {
+	public void abrirLoja() {
 		System.out.println("Quanto dinheiro você tem em caixa?");
 		String caixaStr = in.nextLine();
 		double caixa = 0;
@@ -39,18 +37,18 @@ public class Hortifruti {
 		}catch(NumberFormatException e){
 			caixa = Erros.erroDouble(e);
 		}
-		
+
 		fin = new Financeiro(caixa);
 		estoque = new Estoque();
-		
+
 		System.out.println("Você tem " + estoque.macasDisponiveis + " maçãs em estoque. \n"
 				+ "Voce pode comprar mais por " + formatPrecos(fin.getPrecoCompra()) + " cada");
-		
+
 		estoque.abastecerMacas();
-		
+
 		System.out.println("Por quanto você vai vender a unidade hoje?");
 		String precoStr = in.nextLine();
-		
+
 		try {
 			fin.setPreco(Double.parseDouble(precoStr));
 		}catch(NumberFormatException e) {
@@ -59,32 +57,37 @@ public class Hortifruti {
 	}
 
 	// Menu inicial
-	static void menu() {
-		boolean loop = true;
+	public void menu() {
+		boolean lacoMenu = true;
+		String op;
 		do {
-			System.out.println("1 - Atender cliente \n2 - Gerenciar estoque \n0 - Sair");
-			try {
-				switch (Integer.parseInt(in.nextLine())) {
-				case 1:
-					atenderCliente();
-					break;
-				case 2:
-					estoque.gerenciarEstoque();
-					break;
-				case 0:
-					System.out.println("Saindo!");
-					loop = false;
-					break;
-				}
+			System.out.println("1 - Atender cliente \n2 - Gerenciar estoque \n3 - Consultar caixa \n0 - Sair");
+			op = in.nextLine();
+			switch (op) {
+			case "1":
+				atenderCliente();
+				break;
+			case "2":
+				estoque.gerenciarEstoque();
+				break;
+			case "3":
+				System.out.println("Caixa: " + formatPrecos(fin.getCaixa()));
+				break;
+			case "0":
+				System.out.println("Saindo!");
+				lacoMenu = false;
+				fin.gerarReceita();
+				break;
+			default:
+				System.out.println("Digite uma opção válida");
 				
-			}catch(NumberFormatException e) {
-				Erros.erroInt(e);
 			}
-		} while (loop);
+
+		} while (lacoMenu);
 	}
 
 	// Todo o atendimento ao cliente
-	static void atenderCliente() {
+	public void atenderCliente() {
 
 		if (estoque.macasDisponiveis == 0) {
 			System.out.println("Sinto muito, acabaram as maçãs");
@@ -94,7 +97,7 @@ public class Hortifruti {
 			try {				
 				qtde = Integer.parseInt(in.nextLine());
 			}catch(NumberFormatException e) {
-				Erros.erroInt(e);
+				qtde = Erros.erroInt(e);
 			}
 
 			while (qtde > estoque.macasDisponiveis && estoque.macasDisponiveis > 0) {
@@ -103,41 +106,46 @@ public class Hortifruti {
 				try {
 					qtde = Integer.parseInt(in.nextLine());
 				}catch(NumberFormatException e) {
-					Erros.erroInt(e);
+					qtde = Erros.erroInt(e);
 				}
 			}
-
+			
 			double total = fin.getPreco() * qtde;
 			System.out.println("Vai te custar apenas " + formatPrecos(total));
 
-			System.out.println("Qual a forma de pagamento?\n1 - Crédito\n2 - Débito\n3 - Dinheiro");
-			int formaPagamento = 0;
-			try {
-				formaPagamento = Integer.parseInt(in.nextLine());	
-			}catch(NumberFormatException e) {
-				Erros.erroInt(e);
+			String formaPagamento = "";
+			boolean lacoPagamento = true;
+			while(lacoPagamento) {
+				System.out.println("Qual a forma de pagamento?\n1 - Crédito\n2 - Débito\n3 - Dinheiro");
+				formaPagamento = in.nextLine();
+				if("123".contains(formaPagamento)) {
+					lacoPagamento = false;
+				}else {
+					System.out.println("Digite uma opção válida");
+				}
 			}
-
-			System.out.println("CPF na nota?\n1 - Sim\n2 - Não");
-			int cpfNota = 0;
-			try {
-				cpfNota = Integer.parseInt(in.nextLine());				
-			}catch(NumberFormatException e) {
-				Erros.erroInt(e);
-			}
-
+			
 			String cpfCliente = "";
-			if (cpfNota == 1) {
-				System.out.println("Digite o CPF: ");
-				cpfCliente = in.nextLine();
+			boolean lacoCpf = true;
+			while(lacoCpf) {
+				lacoCpf = false;
+				System.out.println("CPF na nota?\n1 - Sim\n2 - Não");
+				String cpfNota = in.nextLine();
+				
+				if (cpfNota.equals("1")) {
+					System.out.println("Digite o CPF: ");
+					cpfCliente = in.nextLine();
+				}else if(!cpfNota.equals("2")) {
+					System.out.println("Digite um valor válido!");
+					lacoCpf = true;
+				}
 			}
-
 			fin.registrarVenda(formaPagamento, total, qtde, cpfCliente);
 		}
 	}
 
 	// Formata o CPF
-	static String formatCPF(String string) {
+	public String formatCPF(String string) {
 			MaskFormatter mask;
 			try {
 				mask = new MaskFormatter("###.###.###-##");
@@ -148,7 +156,7 @@ public class Hortifruti {
 			}
 		}
 
-	static String formatPrecos(double preco) {
+	public String formatPrecos(double preco) {
 		DecimalFormat mask = new DecimalFormat("R$0.00");
 		return mask.format(preco);
 	}
