@@ -41,7 +41,7 @@ public class Hortifruti {
 		fin = new Financeiro(caixa);
 		estoque = new Estoque();
 
-		System.out.println("Você tem " + estoque.macasDisponiveis + " maçãs em estoque. \n"
+		System.out.println("Você tem " + estoque.getMacasDisponiveis() + " maçãs em estoque. \n"
 				+ "Voce pode comprar mais por " + formatPrecos(fin.getPrecoCompra()) + " cada");
 
 		estoque.abastecerMacas();
@@ -89,7 +89,7 @@ public class Hortifruti {
 	// Todo o atendimento ao cliente
 	public void atenderCliente() {
 
-		if (estoque.macasDisponiveis == 0) {
+		if (estoque.getMacasDisponiveis() == 0) {
 			System.out.println("Sinto muito, acabaram as maçãs");
 		} else {
 			System.out.println("Ola, seja bem vinde. Quantas maçãs voce deseja?");
@@ -100,9 +100,9 @@ public class Hortifruti {
 				qtde = Erros.erroInt(e);
 			}
 
-			while (qtde > estoque.macasDisponiveis && estoque.macasDisponiveis > 0) {
+			while (qtde > estoque.getMacasDisponiveis() && estoque.getMacasDisponiveis() > 0) {
 				System.out.println(
-						"Infelizmente só temos " + estoque.macasDisponiveis + " maçãs...\nGostaria de levar outra quantidade?");
+						"Infelizmente só temos " + estoque.getMacasDisponiveis() + " maçãs...\nGostaria de levar outra quantidade?");
 				try {
 					qtde = Integer.parseInt(in.nextLine());
 				}catch(NumberFormatException e) {
@@ -140,7 +140,7 @@ public class Hortifruti {
 					lacoCpf = true;
 				}
 			}
-			fin.registrarVenda(formaPagamento, total, qtde, cpfCliente);
+			fin.vender(formaPagamento, total, qtde, cpfCliente);
 		}
 	}
 

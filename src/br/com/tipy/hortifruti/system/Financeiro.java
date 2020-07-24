@@ -12,7 +12,7 @@ import br.com.tipy.hortifruti.notafiscalfile.file.DemoJFileChooser;
 public class Financeiro extends Hortifruti{
 	private double caixa, caixaInicio, lucroBruto, preco;
 	private double precoCompra = Math.random() * 2;
-	static int macasVendidas, credito, debito, dinheiro;
+	private int macasVendidas = 0, credito = 0, debito = 0, dinheiro = 0;
 	
 	
 	public double getCaixa() {
@@ -52,10 +52,13 @@ public class Financeiro extends Hortifruti{
 		lucroBruto = this.caixa - this.caixaInicio;
 		System.out.println("Inicio do dia: " + formatPrecos(caixaInicio));
 		System.out.println("Fim do dia: " +formatPrecos(caixa));
-		System.out.println("Forma compradas " + estoque.macasAbastecidas + " maças por " + formatPrecos(precoCompra) + 
-				" cada. Total: " + formatPrecos(estoque.macasAbastecidas * precoCompra));
+		System.out.println("Forma compradas " + estoque.getMacasAbastecidas() + " maças por " + formatPrecos(precoCompra) + 
+				" cada. Total: " + formatPrecos(estoque.getMacasAbastecidas() * precoCompra));
 		System.out.println("Foram vendidas " + macasVendidas + " maçãs por " + formatPrecos(preco) + " cada. Total: " + formatPrecos(macasVendidas * preco));
 		System.out.println("Lucro: " + formatPrecos(lucroBruto));
+		System.out.println("Compras no crédito: " + this.credito);
+		System.out.println("Compras no débito: " + this.debito);
+		System.out.println("Compras no dinheiro: " + this.dinheiro);
 	}
 	
 	
@@ -94,49 +97,51 @@ public class Financeiro extends Hortifruti{
 		
 	}
 	
-	public void registrarVenda(String formaPagamento, double total, int qtde, String cpfCliente) {
-		double recebido = 0;
+	public void vender(String formaPagamento, double total, int qtde, String cpfCliente) {
+//		double recebido = 0;
 		double troco = 0;
-		if (formaPagamento.equals("3")) {
-			System.out.println("Qual o valor recebido?");
-			try {
-				recebido = Double.parseDouble(in.nextLine());				
-			}catch(NumberFormatException e) {
-				Erros.erroDouble(e);
-			}
-			if (recebido >= total) {
-				troco = recebido - total;
-				gerarNotaFiscal(qtde, preco, total, recebido, troco, cpfCliente);
-				estoque.macasDisponiveis -= qtde;
-				caixa += total;
-				macasVendidas += qtde;
-			}else {
-				System.out.println("Valor Insuficiente!");
-			}
-		}else {
-			if(cartao(formaPagamento)) {
-				gerarNotaFiscal(qtde, preco, total, total, troco, cpfCliente);
-				estoque.macasDisponiveis -= qtde;
-				caixa += total;
-				macasVendidas += qtde;	
-			}
+		
+		switch(formaPagamento) {
+		case "1":
+			System.out.println("Insira a senha");
+			in.nextLine();
+			registrarVenda(qtde, total);
+			this.credito++;
+			gerarNotaFiscal(qtde, preco, total, total, troco, cpfCliente);
+			break;
+		case "2":
+			System.out.println("Insira a senha");
+			in.nextLine();
+			registrarVenda(qtde, total);
+			this.debito++;
+			gerarNotaFiscal(qtde, preco, total, total, troco, cpfCliente);
+			break;
+		case "3":
+			venderDinheiro(qtde, total, cpfCliente);
 		}
 	}
-
-	public boolean cartao(String formaPagamento) {
-		System.out.println("Digite a senha: ");
-		String senha = in.nextLine();
-		if((formaPagamento.equals("1") && senha.length() < 4) || (formaPagamento.equals("2") && senha.length() < 6)) {
-			System.out.println("Senha Incorreta");
-			return false;
+	
+	public void registrarVenda(int qtde, double total) {
+		estoque.setMacasDisponiveis(estoque.getMacasDisponiveis() - qtde);
+		caixa += total;
+		macasVendidas += qtde;
+	}
+	
+	public void venderDinheiro(int qtde, double total, String cpf) {
+		System.out.println("Qual o valor recebido?");
+		double recebido = 0;
+		double troco = 0;
+		try {
+			recebido = Double.parseDouble(in.nextLine());				
+		}catch(NumberFormatException e) {
+			Erros.erroDouble(e);
+		}
+		if (recebido >= total) {
+			troco = recebido - total;
+			registrarVenda(qtde, total);
+			gerarNotaFiscal(qtde, recebido, total, recebido, troco, cpf);
 		}else {
-			int num = (int) (Math.random()*100);
-			if(num % 2 == 0) {
-				System.out.println("Transação Não Autorizada");
-				return false;
-			}else {
-				return true;
-			}
+			System.out.println("Valor Insuficiente!");
 		}
 	}
 }
