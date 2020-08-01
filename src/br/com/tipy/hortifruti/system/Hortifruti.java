@@ -5,9 +5,8 @@ import java.util.Scanner;
 
 import javax.swing.text.MaskFormatter;
 
-import br.com.tipy.hortifruti.datetime.DateTime;
 import br.com.tipy.hortifruti.errors.Erros;
-import br.com.tipy.hortifruti.notafiscalfile.file.Arquivo;
+import br.com.tipy.hortifruti.model.ProdutoEstoque;
 
 public class Hortifruti {
 	
@@ -15,16 +14,8 @@ public class Hortifruti {
 
 	static final String COMPANY_NAME = "HORTIFRUTI DO TI";
 	static Financeiro fin;
-	static Estoque estoque;
+	static ProdutoEstoque estoque;
 
-//	excluir
-	public void main(String[] args) {
-		Arquivo.start(DateTime.getDate());
-		abrirLoja();
-		menu();
-		fin.gerarReceita();
-		System.exit(0);
-	}
 
 	// Abre a loja, inicializando tudo
 	public void abrirLoja() {
@@ -39,7 +30,7 @@ public class Hortifruti {
 		}
 
 		fin = new Financeiro(caixa);
-		estoque = new Estoque();
+		estoque = new ProdutoEstoque();
 
 		System.out.println("Você tem " + estoque.getMacasDisponiveis() + " maçãs em estoque. \n"
 				+ "Voce pode comprar mais por " + formatPrecos(fin.getPrecoCompra()) + " cada");

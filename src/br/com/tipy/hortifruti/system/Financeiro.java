@@ -10,6 +10,7 @@ import br.com.tipy.hortifruti.notafiscalfile.file.Arquivo;
 import br.com.tipy.hortifruti.notafiscalfile.file.DemoJFileChooser;
 
 public class Financeiro extends Hortifruti{
+	
 	private double caixa, caixaInicio, lucroBruto, preco;
 	private double precoCompra = Math.random() * 2;
 	private int macasVendidas = 0, credito = 0, debito = 0, dinheiro = 0;
