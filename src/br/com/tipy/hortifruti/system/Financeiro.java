@@ -5,9 +5,11 @@ import com.google.zxing.WriterException;
 
 import br.com.tipy.hortifruti.datetime.DateTime;
 import br.com.tipy.hortifruti.errors.Erros;
+import br.com.tipy.hortifruti.model.dayresume.DayResume;
 import br.com.tipy.hortifruti.notafiscalfile.QRCode;
 import br.com.tipy.hortifruti.notafiscalfile.file.Arquivo;
 import br.com.tipy.hortifruti.notafiscalfile.file.DemoJFileChooser;
+import br.com.tipy.hortifruti.util.money.MoneyUtil;
 
 public class Financeiro extends Hortifruti{
 	
@@ -49,20 +51,6 @@ public class Financeiro extends Hortifruti{
 		this.caixaInicio = caixa;
 	}
 	
-	public void gerarReceita() {
-		lucroBruto = this.caixa - this.caixaInicio;
-		System.out.println("Inicio do dia: " + formatPrecos(caixaInicio));
-		System.out.println("Fim do dia: " +formatPrecos(caixa));
-		System.out.println("Forma compradas " + estoque.getMacasAbastecidas() + " maças por " + formatPrecos(precoCompra) + 
-				" cada. Total: " + formatPrecos(estoque.getMacasAbastecidas() * precoCompra));
-		System.out.println("Foram vendidas " + macasVendidas + " maçãs por " + formatPrecos(preco) + " cada. Total: " + formatPrecos(macasVendidas * preco));
-		System.out.println("Lucro: " + formatPrecos(lucroBruto));
-		System.out.println("Compras no crédito: " + this.credito);
-		System.out.println("Compras no débito: " + this.debito);
-		System.out.println("Compras no dinheiro: " + this.dinheiro);
-	}
-	
-	
 	
 	public void gerarNotaFiscal(int qtde, double preco, double total, double recebido, double troco, String cpf) {
 //		Scanner in = new Scanner(System.in);
@@ -72,10 +60,10 @@ public class Financeiro extends Hortifruti{
 		str += "*****************************" + DateTime.getTime() + "*************************************\n";
 		str += "Produto: maçãs\n";
 		str += "Quantidade: " + qtde + "\n";
-		str += "Preço unitário: " + formatPrecos(preco) + "\n";
-		str += "Valor Total: " + formatPrecos(total) + "\n";
-		str += "Valor recebido: " + formatPrecos(recebido) + "\n";
-		str += "Troco: " + formatPrecos(troco) + "\n";
+		str += "Preço unitário: " + MoneyUtil.format(preco) + "\n";
+		str += "Valor Total: " + MoneyUtil.format(total) + "\n";
+		str += "Valor recebido: " + MoneyUtil.format(recebido) + "\n";
+		str += "Troco: " + MoneyUtil.format(troco) + "\n";
 		str += "******************************" + "\n";
 		str += "CPF: " + super.formatCPF(cpf) + "\n";
 		str += "************* Obrigado e volte sempre *****************\n";
@@ -123,7 +111,7 @@ public class Financeiro extends Hortifruti{
 	}
 	
 	public void registrarVenda(int qtde, double total) {
-		estoque.setMacasDisponiveis(estoque.getMacasDisponiveis() - qtde);
+//		estoque.setMacasDisponiveis(estoque.getMacasDisponiveis() - qtde);
 		caixa += total;
 		macasVendidas += qtde;
 	}

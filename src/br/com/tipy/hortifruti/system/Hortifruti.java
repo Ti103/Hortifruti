@@ -1,12 +1,13 @@
 package br.com.tipy.hortifruti.system;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Scanner;
 
 import javax.swing.text.MaskFormatter;
 
 import br.com.tipy.hortifruti.errors.Erros;
-import br.com.tipy.hortifruti.model.ProdutoEstoque;
+import br.com.tipy.hortifruti.model.dayresume.DayResume;
+import br.com.tipy.hortifruti.model.stock.ProdutoEstoque;
+import br.com.tipy.hortifruti.util.money.MoneyUtil;
 
 public class Hortifruti {
 	
@@ -15,10 +16,11 @@ public class Hortifruti {
 	static final String COMPANY_NAME = "HORTIFRUTI DO TI";
 	static Financeiro fin;
 	static ProdutoEstoque estoque;
-
+	public static GerenciadorEstoque ge;
 
 	// Abre a loja, inicializando tudo
 	public void abrirLoja() {
+		ge = new GerenciadorEstoque();
 		System.out.println("Quanto dinheiro você tem em caixa?");
 		String caixaStr = in.nextLine();
 		double caixa = 0;
@@ -30,12 +32,10 @@ public class Hortifruti {
 		}
 
 		fin = new Financeiro(caixa);
-		estoque = new ProdutoEstoque();
-
-		System.out.println("Você tem " + estoque.getMacasDisponiveis() + " maçãs em estoque. \n"
-				+ "Voce pode comprar mais por " + formatPrecos(fin.getPrecoCompra()) + " cada");
-
-		estoque.abastecerMacas();
+//		estoque = new ProdutoEstoque();
+//
+//		System.out.println("Você tem " + estoque.getMacasDisponiveis() + " maçãs em estoque. \n"
+//				+ "Voce pode comprar mais por " + formatPrecos(fin.getPrecoCompra()) + " cada");
 
 		System.out.println("Por quanto você vai vender a unidade hoje?");
 		String precoStr = in.nextLine();
@@ -52,22 +52,27 @@ public class Hortifruti {
 		boolean lacoMenu = true;
 		String op;
 		do {
-			System.out.println("1 - Atender cliente \n2 - Gerenciar estoque \n3 - Consultar caixa \n0 - Sair");
+			System.out.println("1 - Atender cliente \n2 - Abastecer estoque \n3 - Consultar caixa \n0 - Sair");
 			op = in.nextLine();
 			switch (op) {
 			case "1":
 				atenderCliente();
 				break;
 			case "2":
-				estoque.gerenciarEstoque();
+				System.out.print("Produto: ");
+				String produto = in.nextLine();
+				System.out.print("Quantidade: ");
+				long quantidade = Integer.parseInt(in.nextLine());
+				ge.setQuantidadeEstoque(produto, quantidade);
+//				estoque.gerenciarEstoque();
 				break;
 			case "3":
-				System.out.println("Caixa: " + formatPrecos(fin.getCaixa()));
+				System.out.println("Caixa: " + MoneyUtil.format(fin.getCaixa()));
 				break;
 			case "0":
 				System.out.println("Saindo!");
 				lacoMenu = false;
-				fin.gerarReceita();
+//				fin.gerarReceita();
 				break;
 			default:
 				System.out.println("Digite uma opção válida");
@@ -80,7 +85,8 @@ public class Hortifruti {
 	// Todo o atendimento ao cliente
 	public void atenderCliente() {
 
-		if (estoque.getMacasDisponiveis() == 0) {
+//		if (estoque.getMacasDisponiveis() == 0) {
+		if (1 == 0) {
 			System.out.println("Sinto muito, acabaram as maçãs");
 		} else {
 			System.out.println("Ola, seja bem vinde. Quantas maçãs voce deseja?");
@@ -90,19 +96,19 @@ public class Hortifruti {
 			}catch(NumberFormatException e) {
 				qtde = Erros.erroInt(e);
 			}
-
-			while (qtde > estoque.getMacasDisponiveis() && estoque.getMacasDisponiveis() > 0) {
-				System.out.println(
-						"Infelizmente só temos " + estoque.getMacasDisponiveis() + " maçãs...\nGostaria de levar outra quantidade?");
-				try {
-					qtde = Integer.parseInt(in.nextLine());
-				}catch(NumberFormatException e) {
-					qtde = Erros.erroInt(e);
-				}
-			}
-			
-			double total = fin.getPreco() * qtde;
-			System.out.println("Vai te custar apenas " + formatPrecos(total));
+//
+//			while (qtde > estoque.getMacasDisponiveis() && estoque.getMacasDisponiveis() > 0) {
+//				System.out.println(
+//						"Infelizmente só temos " + estoque.getMacasDisponiveis() + " maçãs...\nGostaria de levar outra quantidade?");
+//				try {
+//					qtde = Integer.parseInt(in.nextLine());
+//				}catch(NumberFormatException e) {
+//					qtde = Erros.erroInt(e);
+//				}
+//			}
+//			
+//			double total = fin.getPreco() * qtde;
+//			System.out.println("Vai te custar apenas " + formatPrecos(total));
 
 			String formaPagamento = "";
 			boolean lacoPagamento = true;
@@ -131,7 +137,7 @@ public class Hortifruti {
 					lacoCpf = true;
 				}
 			}
-			fin.vender(formaPagamento, total, qtde, cpfCliente);
+//			fin.vender(formaPagamento, total, qtde, cpfCliente);
 		}
 	}
 
@@ -146,11 +152,6 @@ public class Hortifruti {
 				throw new RuntimeException(e);
 			}
 		}
-
-	public String formatPrecos(double preco) {
-		DecimalFormat mask = new DecimalFormat("R$0.00");
-		return mask.format(preco);
-	}
 }
 
 

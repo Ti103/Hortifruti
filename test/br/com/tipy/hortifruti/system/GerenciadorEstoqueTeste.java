@@ -3,7 +3,7 @@ package br.com.tipy.hortifruti.system;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.tipy.hortifruti.model.ProdutoEstoque;
+import br.com.tipy.hortifruti.model.stock.ProdutoEstoque;
 
 public class GerenciadorEstoqueTeste {
 	

@@ -10,6 +10,7 @@ public class Initializer {
 		Arquivo.start(DateTime.getDate());
 		h.abrirLoja();
 		h.menu();
+		
 		System.exit(0);
 	}
 }
