@@ -36,7 +36,7 @@ public class ProdutoEstoque {
 		return qtdDisponiveis;
 	}
 
-	public void setQtdDisponiveis(int qtdDisponiveis) {
+	public void setQtdDisponiveis(long qtdDisponiveis) {
 		this.qtdDisponiveis = qtdDisponiveis;
 	}
 
@@ -47,6 +47,12 @@ public class ProdutoEstoque {
 	
 	public long getQtdAbastecidas() {
 		return qtdAbastecidas;
+	}
+
+	@Override
+	public String toString() {
+		return "ProdutoEstoque [item=" + item + ", qtdDisponiveis=" + qtdDisponiveis + ", qtdAbastecidas="
+				+ qtdAbastecidas + "]";
 	}
 
 }

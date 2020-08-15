@@ -8,7 +8,8 @@ public class Initializer {
 	public static void main(String[] args) {
 		Hortifruti h = new Hortifruti();
 		Arquivo.start(DateTime.getDate());
-		h.abrirLoja();
+		
+//		h.abrirLoja();
 		h.menu();
 		
 		System.exit(0);
