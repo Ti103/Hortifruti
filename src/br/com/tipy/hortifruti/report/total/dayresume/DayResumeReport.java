@@ -17,7 +17,7 @@ public class DayResumeReport {
 		System.out.println("Total vendido: " + MoneyUtil.format(model.getLiquidSale()));
 		System.out.println("Totalizadores por pagamento:");
 		model.getPaymentsSold().forEach(p ->{
-			System.out.println(p.getPm().getId() + "-" + p.getPm().getDescricao() + ": " + MoneyUtil.format(p.getSaleTotal()));
+		System.out.println(p.getId() + "-" + p.getDescricao() + ": " + MoneyUtil.format(p.getSaleTotal()));
 		});
 	}
 }

@@ -27,4 +27,16 @@ public class Erros {
 			return erroDouble(f);
 		}
 	}
+	
+	public static long erroLong(NumberFormatException e) {
+		System.out.println("Digite um valor numérico válido");
+
+		String peso = in.nextLine();
+
+		try {
+			return Long.parseLong(peso);
+		} catch (NumberFormatException f) {
+			return erroLong(f);
+		}
+	}
 }

@@ -10,10 +10,13 @@ import br.com.tipy.hortifruti.errors.Erros;
 import br.com.tipy.hortifruti.initializer.screen.ShowProducts;
 import br.com.tipy.hortifruti.model.dayresume.DayResume;
 import br.com.tipy.hortifruti.model.sale.item.Item;
+import br.com.tipy.hortifruti.model.sale.payment.Payment;
 import br.com.tipy.hortifruti.model.stock.ProdutoEstoque;
-import br.com.tipy.hortifruti.payments.methods.PaymentMethods;
+import br.com.tipy.hortifruti.payments.ManagerPayment;
+import br.com.tipy.hortifruti.payments.methods.PaymentMethod;
 import br.com.tipy.hortifruti.repository.stock.StockRepository;
 import br.com.tipy.hortifruti.util.money.MoneyUtil;
+import br.com.tipy.hortifruti.venda.Venda;
 
 public class Hortifruti {
 
@@ -137,9 +140,8 @@ public class Hortifruti {
 			try {
 				id = Long.parseLong(in.nextLine());
 			} catch (NumberFormatException e) {
-				id = Erros.erroInt(e);
+				id = Erros.erroLong(e);
 			}
-			
 			if(id == 1) {
 				descricao = "Dinheiro";
 				break;
@@ -151,8 +153,19 @@ public class Hortifruti {
 			}
 		} while (true);
 		
-		PaymentMethods p1 = new PaymentMethods(id, descricao);
-			
+		System.out.print("Valor pago: ");
+		double receivedValue = 0;
+		try {
+			receivedValue = Long.parseLong(in.nextLine());
+		} catch(NumberFormatException e) {
+			receivedValue = Erros.erroLong(e);
+		}
+		
+		ManagerPayment mp = new ManagerPayment(new Payment(id, descricao, valorTotal));
+		if(mp.getP().getId() == 1) {
+			Venda(mp.moneyPay(receivedValue));
+		}
+		
 //
 //			while (qtde > estoque.getMacasDisponiveis() && estoque.getMacasDisponiveis() > 0) {
 //				System.out.println(

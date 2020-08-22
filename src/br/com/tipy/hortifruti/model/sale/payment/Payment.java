@@ -1,28 +1,37 @@
 package br.com.tipy.hortifruti.model.sale.payment;
 
-import br.com.tipy.hortifruti.payments.methods.PaymentMethods;
-
 public class Payment {
 
-	private PaymentMethods method;
+	private long id;
+	private String descricao;
 	private double saleTotal;
-	
-	public Payment(PaymentMethods method, double saleTotal) {
-		this.method = method;
+
+	public Payment(long id, String descricao, double saleTotal) {
+		this.id = id;
+		this.descricao = descricao;
 		this.saleTotal = saleTotal;
 	}
-	
-	public PaymentMethods getPm() {
-		return method;
+
+	public long getId() {
+		return id;
 	}
 
-	public void setPm(PaymentMethods method) {
-		this.method = method;
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 	public double getSaleTotal() {
 		return saleTotal;
 	}
+
 	public void setSaleTotal(double saleTotal) {
 		this.saleTotal = saleTotal;
 	}

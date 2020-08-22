@@ -13,7 +13,7 @@ public class DayResumeReportTest {
 		
 		List<Item> listItem = new ArrayList<Item>();
 		List<Payment> listPayment = new ArrayList<Payment>();
-		listPayment.add(new Payment(1, "Dinheiro", 345));
+//		listPayment.add(new Payment(1, "Dinheiro", 345));
 		DayResume dr = new DayResume(100, 200, listItem, listPayment);
 		DayResumeReport report = new DayResumeReport(dr);
 		report.print();
