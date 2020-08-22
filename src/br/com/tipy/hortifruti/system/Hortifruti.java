@@ -11,6 +11,7 @@ import br.com.tipy.hortifruti.initializer.screen.ShowProducts;
 import br.com.tipy.hortifruti.model.dayresume.DayResume;
 import br.com.tipy.hortifruti.model.sale.item.Item;
 import br.com.tipy.hortifruti.model.stock.ProdutoEstoque;
+import br.com.tipy.hortifruti.payments.methods.PaymentMethods;
 import br.com.tipy.hortifruti.repository.stock.StockRepository;
 import br.com.tipy.hortifruti.util.money.MoneyUtil;
 
@@ -125,6 +126,32 @@ public class Hortifruti {
 		}while(true);
 		
 		System.out.println("Valor total: " + MoneyUtil.format(valorTotal));
+		
+		long id;
+		String descricao;
+		
+		do {
+			System.out.println("Forma de pagamento:\n1 - Dinheiro\n2 - Cartão");
+			
+			
+			try {
+				id = Long.parseLong(in.nextLine());
+			} catch (NumberFormatException e) {
+				id = Erros.erroInt(e);
+			}
+			
+			if(id == 1) {
+				descricao = "Dinheiro";
+				break;
+			}else if(id == 2 ) {
+				descricao = "Cartão";
+				break;
+			}else {
+				System.out.println("Opção inválida");
+			}
+		} while (true);
+		
+		PaymentMethods p1 = new PaymentMethods(id, descricao);
 			
 //
 //			while (qtde > estoque.getMacasDisponiveis() && estoque.getMacasDisponiveis() > 0) {

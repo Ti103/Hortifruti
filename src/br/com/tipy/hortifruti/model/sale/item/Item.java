@@ -6,7 +6,6 @@ public class Item {
 	private double price;
 	
 	public Item(long cod, String name, double price) {
-		super();
 		this.cod = cod;
 		this.name = name;
 		this.price = price;

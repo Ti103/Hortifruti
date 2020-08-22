@@ -19,6 +19,7 @@ public class ShowProducts {
 		for(ProdutoEstoque pp : p) {
 			System.out.println(i++ + " - " + pp.getItem().getCod() + ":" + pp.getItem().getName() + " : "  + MoneyUtil.format(pp.getItem().getPrice()) + " : " + pp.getQtdDisponiveis());
 		}
+		System.out.println("Digite 0 para encerrar");
 		System.out.println("===================================================");		
 	}
 }
