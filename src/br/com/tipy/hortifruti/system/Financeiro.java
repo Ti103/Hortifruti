@@ -1,7 +1,6 @@
 package br.com.tipy.hortifruti.system;
 import java.io.IOException;
 
-import com.google.zxing.WriterException;
 
 import br.com.tipy.hortifruti.datetime.DateTime;
 import br.com.tipy.hortifruti.errors.Erros;
@@ -68,13 +67,7 @@ public class Financeiro extends Hortifruti{
 		str += "CPF: " + super.formatCPF(cpf) + "\n";
 		str += "************* Obrigado e volte sempre *****************\n";
 
-		try {
-			QRCode.generateQRCodeImage(str, 350, 350, DemoJFileChooser.getFile().getAbsolutePath() + "/QRCode" + DateTime.getTime() + ".png");
-		}catch (WriterException e) {
-			System.out.println("Could not generate QR Code, WriterException :: " + e.getMessage());
-		}catch (IOException e) {
-			System.out.println("Could not generate QR Code, IOException :: " + e.getMessage());
-		}
+		
 		
 		try {
 			Arquivo.write(str);

@@ -7,7 +7,7 @@ import br.com.tipy.hortifruti.system.Hortifruti;
 public class Initializer {
 	public static void main(String[] args) {
 		Hortifruti h = new Hortifruti();
-		Arquivo.start(DateTime.getDate());
+//		Arquivo.start(DateTime.getDate());
 		
 //		h.abrirLoja();
 		h.menu();

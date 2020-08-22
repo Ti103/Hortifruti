@@ -3,6 +3,7 @@ package br.com.tipy.hortifruti.system;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.tipy.hortifruti.model.sale.item.Item;
 import br.com.tipy.hortifruti.model.stock.ProdutoEstoque;
 
 public class GerenciadorEstoqueTeste {
@@ -37,7 +38,7 @@ public class GerenciadorEstoqueTeste {
 	static List<ProdutoEstoque> geradorProdutoEstoque(int i) {
 		List<ProdutoEstoque> l = new ArrayList<>();
 		while (i-- > 0) {
-			l.add(new ProdutoEstoque("Produto" + i, (long)(Math.random() * 674), 0));
+			l.add(new ProdutoEstoque(new Item((long)(Math.random() * 674), "Produto" + 1, (Math.random() * 674)), 100, 0));
 		}
 		return l;
 	}
