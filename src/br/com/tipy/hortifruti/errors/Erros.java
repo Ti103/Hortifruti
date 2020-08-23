@@ -6,11 +6,9 @@ public class Erros {
 	
 	public static int erroInt(NumberFormatException e) {
 		System.out.println("Digite um valor numérico válido");
-
-		String peso = in.nextLine();
-
+		
 		try {
-			return Integer.parseInt(peso);
+			return in.nextInt();
 		} catch (NumberFormatException f) {
 			return erroInt(f);
 		}
@@ -19,10 +17,8 @@ public class Erros {
 	public static double erroDouble(NumberFormatException e) {
 		System.out.println("Digite um valor numérico válido");
 
-		String peso = in.nextLine();
-
 		try {
-			return Double.parseDouble(peso);
+			return in.nextDouble();
 		} catch (NumberFormatException f) {
 			return erroDouble(f);
 		}
@@ -31,10 +27,8 @@ public class Erros {
 	public static long erroLong(NumberFormatException e) {
 		System.out.println("Digite um valor numérico válido");
 
-		String peso = in.nextLine();
-
 		try {
-			return Long.parseLong(peso);
+			return in.nextLong();
 		} catch (NumberFormatException f) {
 			return erroLong(f);
 		}

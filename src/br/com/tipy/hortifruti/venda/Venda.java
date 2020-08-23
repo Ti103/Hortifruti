@@ -10,11 +10,11 @@ public class Venda {
 	private List<Item> itens;
 	
 	
-	public Venda(long cod, String data, String cpf, Item itens) {
+	public Venda(long cod, String data, String cpf, List<Item> itens) {
 		this.cod = cod;
 		this.data = data;
 		this.cpf = cpf;
-		this.itens.add(itens);
+		this.itens = itens;
 	}
 	
 	

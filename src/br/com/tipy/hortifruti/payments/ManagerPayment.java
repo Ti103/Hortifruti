@@ -2,17 +2,18 @@ package br.com.tipy.hortifruti.payments;
 
 import java.util.Scanner;
 
+import br.com.tipy.hortifruti.errors.Erros;
 import br.com.tipy.hortifruti.model.sale.payment.Payment;
 
 public class ManagerPayment {
 	private Payment p;
 	private double change = 0;
 	static Scanner in = new Scanner(System.in);
-	
-	public ManagerPayment (Payment p) {
+
+	public ManagerPayment(Payment p) {
 		this.p = p;
 	}
-	
+
 	public Payment getP() {
 		return p;
 	}
@@ -29,7 +30,7 @@ public class ManagerPayment {
 		this.change = change;
 	}
 
-	public double moneyPay(double receivedValue) {
+	public double moneyPay(double receivedValue, double totalValue) {
 		change = receivedValue - p.getSaleTotal();
 		if (change < 0) {
 			System.out.println("Valor insuficiente. Pagar o resto com cartão?\n1 - Sim\n2 - Não");
@@ -38,11 +39,18 @@ public class ManagerPayment {
 				cardPay(change * (-1));
 				break;
 			case 2:
-//				TODO cancelar compra
+				System.out.println("Cancelando compra");
 			}
+		} else {
+			System.out.println("Valor recebido: " + receivedValue + "/n" + "Troco: " + change);
 		}
 		return change;
+//		
+//			registrarVenda(qtde, total);
+//			gerarNotaFiscal(qtde, recebido, total, recebido, troco, cpf);
+		
 	}
+
 	public void cardPay(double receivedValue) {
 		System.out.println("Transação autorizada!");
 	}

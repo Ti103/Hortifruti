@@ -79,29 +79,29 @@ public class Financeiro extends Hortifruti{
 		
 	}
 	
-	public void vender(String formaPagamento, double total, int qtde, String cpfCliente) {
+//	public void vender(String formaPagamento, double total, int qtde, String cpfCliente) {
 //		double recebido = 0;
-		double troco = 0;
-		
-		switch(formaPagamento) {
-		case "1":
-			System.out.println("Insira a senha");
-			in.nextLine();
-			registrarVenda(qtde, total);
-			this.credito++;
-			gerarNotaFiscal(qtde, preco, total, total, troco, cpfCliente);
-			break;
-		case "2":
-			System.out.println("Insira a senha");
-			in.nextLine();
-			registrarVenda(qtde, total);
-			this.debito++;
-			gerarNotaFiscal(qtde, preco, total, total, troco, cpfCliente);
-			break;
-		case "3":
-			venderDinheiro(qtde, total, cpfCliente);
-		}
-	}
+//		double troco = 0;
+//		
+//		switch(formaPagamento) {
+//		case "1":
+//			System.out.println("Insira a senha");
+//			in.nextLine();
+//			registrarVenda(qtde, total);
+//			this.credito++;
+//			gerarNotaFiscal(qtde, preco, total, total, troco, cpfCliente);
+//			break;
+//		case "2":
+//			System.out.println("Insira a senha");
+//			in.nextLine();
+//			registrarVenda(qtde, total);
+//			this.debito++;
+//			gerarNotaFiscal(qtde, preco, total, total, troco, cpfCliente);
+//			break;
+//		case "3":
+////			venderDinheiro(qtde, total, cpfCliente);
+//		}
+//	}
 	
 	public void registrarVenda(int qtde, double total) {
 //		estoque.setMacasDisponiveis(estoque.getMacasDisponiveis() - qtde);
@@ -109,21 +109,21 @@ public class Financeiro extends Hortifruti{
 		macasVendidas += qtde;
 	}
 	
-	public void venderDinheiro(int qtde, double total, String cpf) {
-		System.out.println("Qual o valor recebido?");
-		double recebido = 0;
-		double troco = 0;
-		try {
-			recebido = Double.parseDouble(in.nextLine());				
-		}catch(NumberFormatException e) {
-			Erros.erroDouble(e);
-		}
-		if (recebido >= total) {
-			troco = recebido - total;
-			registrarVenda(qtde, total);
-			gerarNotaFiscal(qtde, recebido, total, recebido, troco, cpf);
-		}else {
-			System.out.println("Valor Insuficiente!");
-		}
-	}
+//	public void venderDinheiro(int qtde, double total, String cpf) {
+//		System.out.println("Qual o valor recebido?");
+//		double recebido = 0;
+//		double troco = 0;
+//		try {
+//			recebido = Double.parseDouble(in.nextLine());				
+//		}catch(NumberFormatException e) {
+//			Erros.erroDouble(e);
+//		}
+//		if (recebido >= total) {
+//			troco = recebido - total;
+//			registrarVenda(qtde, total);
+//			gerarNotaFiscal(qtde, recebido, total, recebido, troco, cpf);
+//		}else {
+//			System.out.println("Valor Insuficiente!");
+//		}
+//	}
 }

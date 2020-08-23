@@ -37,4 +37,9 @@ public class StockRepository {
 		Optional<ProdutoEstoque> findFirst = list.stream().filter(i -> i.getItem().getCod() == cod).findFirst();
 		findFirst.ifPresent(e -> e.setQtdDisponiveis(e.getQtdDisponiveis() - qtde));
 	}
+	
+	public void plus(long cod, long qtde) {
+		Optional<ProdutoEstoque> findFirst = list.stream().filter(i -> i.getItem().getCod() == cod).findFirst();
+		findFirst.ifPresent(e -> e.setQtdDisponiveis(e.getQtdDisponiveis() + qtde));
+	}
 }
