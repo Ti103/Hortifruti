@@ -4,11 +4,11 @@ import java.util.List;
 import br.com.tipy.hortifruti.model.sale.item.Item;;
 
 public class Venda {
+	
 	private long cod;
 	private String data;
 	private String cpf;
 	private List<Item> itens;
-	private List<Integer> qtde;
 	private double precoTotal;
 	private double valorRecebido;
 	private double change;
@@ -71,21 +71,18 @@ public class Venda {
 		this.itens = itens;
 	}
 
-	public void setQtde(List<Integer> qtde) {
-		this.qtde = qtde;
-	}
 
 	public List<Item> getItens() {
 		return itens;
 	}
 
-	public List<Integer> getQtde() {
-		return qtde;
+	public int getQtde() {
+		return getItens().size();
 	}
 
 	@Override
 	public String toString() {
-		return "Venda [cod=" + cod + ", data=" + data + ", cpf=" + cpf + ", itens=" + itens + ", qtde=" + qtde
+		return "Venda [cod=" + cod + ", data=" + data + ", cpf=" + cpf + ", itens=" + itens + ", qtde=" + getQtde()
 				+ ", precoTotal=" + precoTotal + ", valorRecebido=" + valorRecebido + ", change=" + change + "]";
 	}
 	

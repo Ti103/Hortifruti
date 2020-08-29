@@ -4,6 +4,7 @@ public class Item {
 	private long cod;
 	private String name;
 	private double price;
+	private double qtty;
 	
 	public Item(long cod, String name, double price) {
 		this.cod = cod;

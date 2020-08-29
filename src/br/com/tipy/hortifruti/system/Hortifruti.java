@@ -124,7 +124,7 @@ public class Hortifruti {
 				qtde = Erros.erroInt(e);
 			}
 			
-			venda.getQtde().add(qtde);
+//			venda.getQtde());
 			
 			valorTotal += produto.getPrice() * qtde;
 			sr.minus(produto.getCod(), qtde);
