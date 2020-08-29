@@ -1,38 +1,40 @@
 package br.com.tipy.hortifruti.system;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
 import javax.swing.text.MaskFormatter;
 
+import br.com.tipy.hortifruti.datetime.DateTime;
 import br.com.tipy.hortifruti.errors.Erros;
 import br.com.tipy.hortifruti.initializer.screen.ShowProducts;
-import br.com.tipy.hortifruti.model.dayresume.DayResume;
 import br.com.tipy.hortifruti.model.sale.item.Item;
 import br.com.tipy.hortifruti.model.sale.payment.Payment;
 import br.com.tipy.hortifruti.model.stock.ProdutoEstoque;
 import br.com.tipy.hortifruti.payments.ManagerPayment;
-import br.com.tipy.hortifruti.payments.methods.PaymentMethod;
 import br.com.tipy.hortifruti.repository.stock.StockRepository;
 import br.com.tipy.hortifruti.util.money.MoneyUtil;
 import br.com.tipy.hortifruti.venda.Venda;
+import br.com.tipy.hortifruti.venda.management.ManagerVendas;
 
 public class Hortifruti {
 
 	static Scanner inNum = new Scanner(System.in);
 	static Scanner inStr = new Scanner(System.in).useDelimiter("\n");
 
-	static final String COMPANY_NAME = "HORTIFRUTI DO TI";
-	static Financeiro fin;
-	static ProdutoEstoque estoque;
-	public static GerenciadorEstoque ge;
+	public static final String COMPANY_NAME = "HORTIFRUTI DO TI";
+	public Financeiro fin;
+	public ProdutoEstoque estoque;
+	public GerenciadorEstoque ge;
 	public StockRepository sr = new StockRepository();
-	List<ProdutoEstoque> items = sr.findAll();
+	public List<ProdutoEstoque> items = sr.findAll();
+	public ManagerVendas mv;
+	public long cod = 0;
 
 	// Abre a loja, inicializando tudo
 	public void abrirLoja() {
-//		ge = new GerenciadorEstoque();
+		mv = new ManagerVendas();
 		System.out.println("Quanto dinheiro você tem em caixa?");
 		String caixaStr = inStr.nextLine();
 		double caixa = 0;
@@ -44,19 +46,6 @@ public class Hortifruti {
 		}
 
 		fin = new Financeiro(caixa);
-//		estoque = new ProdutoEstoque();
-//
-//		System.out.println("Você tem " + estoque.getMacasDisponiveis() + " maçãs em estoque. \n"
-//				+ "Voce pode comprar mais por " + formatPrecos(fin.getPrecoCompra()) + " cada");
-
-//		System.out.println("Por quanto você vai vender a unidade hoje?");
-//		String precoStr = inStr.nextLine();
-//
-//		try {
-//			fin.setPreco(Double.parseDouble(precoStr));
-//		} catch (NumberFormatException e) {
-//			fin.setPreco(Erros.erroDouble(e));
-//		}
 	}
 
 	// Menu inicial
@@ -64,7 +53,7 @@ public class Hortifruti {
 		boolean lacoMenu = true;
 		String op;
 		do {
-			System.out.println("1 - Atender cliente \n2 - Abastecer estoque \n3 - Consultar caixa \n0 - Sair");
+			System.out.println("1 - Atender cliente \n2 - Abastecer estoque \n3 - Consultar caixa \n4 - Consultar vendas\n0 - Sair");
 			op = inStr.nextLine();
 			switch (op) {
 			case "1":
@@ -77,7 +66,6 @@ public class Hortifruti {
 				System.out.print("Quantidade: ");
 				int quantidade = inNum.nextInt();
 				sr.plus(produto.getCod(), quantidade);
-//				estoque.gerenciarEstoque();
 				break;
 			case "3":
 				System.out.println("Caixa: " + MoneyUtil.format(fin.getCaixa()));
@@ -85,7 +73,6 @@ public class Hortifruti {
 			case "0":
 				System.out.println("Saindo!");
 				lacoMenu = false;
-//				fin.gerarReceita();
 				break;
 			default:
 				System.out.println("Digite uma opção válida");
@@ -97,12 +84,23 @@ public class Hortifruti {
 
 	// Todo o atendimento ao cliente
 	public void atenderCliente() {
-
-		System.out.println("Ola, seja bem vindo");
+		String cpf = "";
 		ShowProducts sp = new ShowProducts();
 		int itemIndex;
 		int qtde;
 		double valorTotal = 0;
+		double receivedValue = 0;
+
+		System.out.println("Olá, seja bem vindo");
+		
+		System.out.println("CPF na nota? \n1)Sim \nNão");
+		cpf = inStr.nextLine(); 
+		if(cpf.equals("1")) {
+			System.out.print("Digite o CPF: ");
+			cpf = inStr.nextLine(); 
+		}
+		
+		Venda venda = new Venda(cod++, DateTime.getDateTime(), cpf);
 		do {
 			sp.show(items);
 			
@@ -116,7 +114,8 @@ public class Hortifruti {
 				break;
 			}
 			
-			Item produto = items.get(itemIndex - 1).getItem(); 
+			Item produto = items.get(itemIndex - 1).getItem();
+			venda.getItens().add(produto);
 			
 			System.out.println("Digite a quantidade: ");
 			try {
@@ -125,96 +124,62 @@ public class Hortifruti {
 				qtde = Erros.erroInt(e);
 			}
 			
+			venda.getQtde().add(qtde);
+			
 			valorTotal += produto.getPrice() * qtde;
 			sr.minus(produto.getCod(), qtde);
 			
 		}while(true);
 		
-		System.out.println("Valor total: " + MoneyUtil.format(valorTotal));
 		
 		long id;
 		String descricao;
-		
-		do {
-			System.out.println("Forma de pagamento:\n1 - Dinheiro\n2 - Cartão");
+		if(valorTotal != 0) {
 			
+			do {
+				System.out.println("Forma de pagamento:\n1 - Dinheiro\n2 - Cartão");
+				
+				try {
+					id = inNum.nextLong();
+				} catch (NumberFormatException e) {
+					id = Erros.erroLong(e);
+				}
+				if(id == 1) {
+					descricao = "Dinheiro";
+					break;
+				}else if(id == 2 ) {
+					descricao = "Cartão";
+					break;
+				}else {
+					System.out.println("Opção inválida");
+				}
+			} while (true);
+			
+			System.out.println("Valor total: " + MoneyUtil.format(valorTotal));
+			System.out.print("Valor pago: ");
 			
 			try {
-				id = inNum.nextLong();
-			} catch (NumberFormatException e) {
-				id = Erros.erroLong(e);
+				receivedValue = inNum.nextLong();
+			} catch(NumberFormatException e) {
+				receivedValue = Erros.erroLong(e);
 			}
-			if(id == 1) {
-				descricao = "Dinheiro";
+			
+			ManagerPayment mp = new ManagerPayment(new Payment(id, descricao, valorTotal));
+						
+			switch(Integer.parseInt(mp.getP().getId().toString())) {
+			case 1:
+				mp.moneyPay(receivedValue, valorTotal);
 				break;
-			}else if(id == 2 ) {
-				descricao = "Cartão";
-				break;
-			}else {
-				System.out.println("Opção inválida");
+			case 2:
+				mp.cardPay(receivedValue);
 			}
-		} while (true);
-		
-		System.out.print("Valor pago: ");
-		double receivedValue = 0;
-		
-		try {
-			receivedValue = inNum.nextLong();
-		} catch(NumberFormatException e) {
-			receivedValue = Erros.erroLong(e);
 		}
+		mv.registrarVenda(venda, valorTotal, receivedValue, receivedValue - valorTotal);
+	}
 		
-		ManagerPayment mp = new ManagerPayment(new Payment(id, descricao, valorTotal));
-		if(mp.getP().getId() == 1) {
-			mp.moneyPay(receivedValue, valorTotal);
-		}
-		
-//
-//			while (qtde > estoque.getMacasDisponiveis() && estoque.getMacasDisponiveis() > 0) {
-//				System.out.println(
-//						"Infelizmente só temos " + estoque.getMacasDisponiveis() + " maçãs...\nGostaria de levar outra quantidade?");
-//				try {
-//					qtde = Integer.parseInt(inNum.nextLine());
-//				}catch(NumberFormatException e) {
-//					qtde = Erros.erroInt(e);
-//				}
-//			}
-//			
-//			double total = fin.getPreco() * qtde;
-//			System.out.println("Vai te custar apenas " + formatPrecos(total));
-
-//		String formaPagamento = "";
-//		boolean lacoPagamento = true;
-//		while (lacoPagamento) {
-//			System.out.println("Qual a forma de pagamento?\n1 - Crédito\n2 - Débito\n3 - Dinheiro");
-//			formaPagamento = inNum.nextLine();
-//			if ("123".contains(formaPagamento)) {
-//				lacoPagamento = false;
-//			} else {
-//				System.out.println("Digite uma opção válida");
-//			}
-//		}
-//
-//		String cpfCliente = "";
-//		boolean lacoCpf = true;
-//		while (lacoCpf) {
-//			lacoCpf = false;
-//			System.out.println("CPF na nota?\n1 - Sim\n2 - Não");
-//			String cpfNota = inNum.nextLine();
-//
-//			if (cpfNota.equals("1")) {
-//				System.out.println("Digite o CPF: ");
-//				cpfCliente = inNum.nextLine();
-//			} else if (!cpfNota.equals("2")) {
-//				System.out.println("Digite um valor válido!");
-//				lacoCpf = true;
-//			}
-		}
-//			fin.vender(formaPagamento, total, qtde, cpfCliente);
-//	}
 
 	// Formata o CPF
-	public String formatCPF(String string) {
+	public static String formatCPF(String string) {
 		MaskFormatter mask;
 		try {
 			mask = new MaskFormatter("###.###.###-##");

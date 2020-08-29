@@ -12,7 +12,7 @@ public class Payment {
 		this.saleTotal = saleTotal;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 

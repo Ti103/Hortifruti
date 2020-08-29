@@ -6,14 +6,18 @@ import java.time.format.DateTimeFormatter;
 
 public class DateTime {
 	public static String getDate() {
-		LocalDate lt = LocalDate.now();
-		DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		return lt.format(df);
+		LocalDate localDate = LocalDate.now();
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		return localDate.format(dateFormatter);
 	}
 	
 	public static String getTime() {
-		LocalTime lt = LocalTime.now();
-		DateTimeFormatter df = DateTimeFormatter.ofPattern("HH:mm:ss");
-		return lt.format(df);
+		LocalTime localTime = LocalTime.now();
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+		return localTime .format(dateFormatter);
+	}
+	
+	public static String getDateTime() {
+		return getDate() + "às" + getTime();
 	}
 }

@@ -1,14 +1,18 @@
 package br.com.tipy.hortifruti.payments;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import br.com.tipy.hortifruti.errors.Erros;
 import br.com.tipy.hortifruti.model.sale.payment.Payment;
+import br.com.tipy.hortifruti.util.money.MoneyUtil;
 
 public class ManagerPayment {
 	private Payment p;
 	private double change = 0;
 	static Scanner in = new Scanner(System.in);
+	private List<Payment> payments = new ArrayList<>();
 
 	public ManagerPayment(Payment p) {
 		this.p = p;
@@ -29,6 +33,11 @@ public class ManagerPayment {
 	public void setChange(double change) {
 		this.change = change;
 	}
+	
+	public void registrarPagamentos() {
+		this.payments.add(this.p);
+	}
+	
 
 	public double moneyPay(double receivedValue, double totalValue) {
 		change = receivedValue - p.getSaleTotal();
@@ -42,7 +51,8 @@ public class ManagerPayment {
 				System.out.println("Cancelando compra");
 			}
 		} else {
-			System.out.println("Valor recebido: " + receivedValue + "/n" + "Troco: " + change);
+			System.out.println("Valor recebido: " + MoneyUtil.format(receivedValue) + "\n" + "Troco: " + MoneyUtil.format(change));
+			registrarPagamentos();
 		}
 		return change;
 //		

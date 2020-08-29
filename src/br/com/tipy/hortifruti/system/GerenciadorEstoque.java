@@ -35,16 +35,5 @@ public class GerenciadorEstoque {
 	public void setQuantidadeEstoque(String produto, long quantidade) {
 		estoque.stream().filter(p -> p.getItem().getName().equals(produto)).findFirst().ifPresent(item -> item.setQtdAbastecidas(quantidade));
 	}
-	
-//	public void abastecerMacas() {
-//		String preco = formatPrecos(fin.getPrecoCompra());
-//		System.out.println("Quantas maçãs você deseja comprar? \t Preço: " + preco);
-//		try {
-//			setMacasAbastecidas(getMacasAbastecidas() + Integer.parseInt(in.nextLine()));			
-//		}catch(NumberFormatException e) {
-//			Erros.erroInt(e);
-//		}
-//		setMacasDisponiveis(getMacasDisponiveis() + getMacasAbastecidas());
-//		fin.setCaixa(fin.getCaixa() - (getMacasAbastecidas() * fin.getPrecoCompra())); 
-//	}
+
 }

@@ -10,7 +10,7 @@ import br.com.tipy.hortifruti.notafiscalfile.file.Arquivo;
 import br.com.tipy.hortifruti.notafiscalfile.file.DemoJFileChooser;
 import br.com.tipy.hortifruti.util.money.MoneyUtil;
 
-public class Financeiro extends Hortifruti{
+public class Financeiro{
 	
 	private double caixa, caixaInicio, lucroBruto, preco;
 	private double precoCompra = Math.random() * 2;
@@ -64,7 +64,7 @@ public class Financeiro extends Hortifruti{
 		str += "Valor recebido: " + MoneyUtil.format(recebido) + "\n";
 		str += "Troco: " + MoneyUtil.format(troco) + "\n";
 		str += "******************************" + "\n";
-		str += "CPF: " + super.formatCPF(cpf) + "\n";
+		str += "CPF: " + Hortifruti.formatCPF(cpf) + "\n";
 		str += "************* Obrigado e volte sempre *****************\n";
 
 		
